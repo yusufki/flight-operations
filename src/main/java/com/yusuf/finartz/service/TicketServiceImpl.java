@@ -25,19 +25,20 @@ import java.util.regex.Pattern;
 @Transactional
 public class TicketServiceImpl implements TicketService {
 
-    private static final int MAX_SEAT_CAPACITY = 1000;
-    private static final String BASE_CURRENCY_CODE = "TL";
-    private static final String BASE_FOREIGN_CODE = "USD";
     private static final String TICKET_CANCELLED = "C";
-    private static final Object MASK_CHAR = "*";
+    private static final String TICKET_ACTIVE = "A";
+    private static final String  MASK_CHAR = "*";
     private static final int UNMASKED_CHAR_START = 4;
     private static final int UNMASKED_CHAR_END = 4;
     private static final int DEFAULT_CARD_NUMBER_LENGTH = 16 ;
 
+
     @Autowired
+    private
     TicketRepository ticketRepository;
 
     @Autowired
+    private
     FlightRepository flightRepository;
 
 
@@ -57,8 +58,10 @@ public class TicketServiceImpl implements TicketService {
         Flight flightDb = flight.get();
 
        if (validateTicketFields(ticket,flightDb)) {
+
            flightDb.setSoldSeatCount(flightDb.getSoldSeatCount()+1);
            ticket.setPaymentCardNumber(maskPaymentCardNumber(ticket.getPaymentCardNumber()));
+           ticket.setStatus(TICKET_ACTIVE);
            return ticketRepository.save(ticket);
        }else {
            throw new RecordNotCreateException("Couldn't create the ticket");
@@ -69,6 +72,10 @@ public class TicketServiceImpl implements TicketService {
 
     private boolean validateTicketFields(Ticket ticket,Flight flightDb) {
 
+        List<Ticket> ticketDb  = this.ticketRepository.findByCustomerIdAndStatus(ticket.getCustomerId(),TICKET_ACTIVE);
+        if (!ticketDb.isEmpty()){
+            throw new RecordNotCreateException("Couldn't create the ticket, the customer has already bought");
+        }
 
         if (flightDb.getSoldSeatCount() == flightDb.getSeatCapacity()){
             throw new RecordNotCreateException("Couldn't create the ticket, flight is full!");
@@ -87,15 +94,15 @@ public class TicketServiceImpl implements TicketService {
         }
         return  true;
     }
-    public static String maskPaymentCardNumber(String paymentCardNumber) {
+    private static String maskPaymentCardNumber(String paymentCardNumber) {
         String ccNumber = paymentCardNumber.replaceAll("\\D", "");
 
-        StringBuilder sb = new StringBuilder("");
-        sb.append(ccNumber.substring(0,UNMASKED_CHAR_START));
+        StringBuilder sb = new StringBuilder();
+        sb.append(ccNumber, 0, UNMASKED_CHAR_START);
         for (int i = 0; i<ccNumber.length()-(UNMASKED_CHAR_START + UNMASKED_CHAR_END);i++ ){
             sb.append(MASK_CHAR);
         }
-        sb.append(ccNumber.substring(((ccNumber.length()- UNMASKED_CHAR_END)-1) ,(ccNumber.length()- 1)));
+        sb.append(ccNumber, ((ccNumber.length()- UNMASKED_CHAR_END)-1), (ccNumber.length()- 1));
         return sb.toString();
     }
 
@@ -121,10 +128,7 @@ public class TicketServiceImpl implements TicketService {
         */
 
         String ccNumber = paymentCardNumber.replaceAll("\\D", "");
-        if (ccNumber.length()==DEFAULT_CARD_NUMBER_LENGTH){
-            return true;
-        }
-        else return false;
+        return ccNumber.length() == DEFAULT_CARD_NUMBER_LENGTH;
 
     }
 
@@ -135,7 +139,6 @@ public class TicketServiceImpl implements TicketService {
         if (ticketDb.isPresent()){
             Ticket ticketUpdate = ticketDb.get();
             ticketUpdate.setId(ticket.getId());
-        //    ticketUpdate.setSoldSeatCount(ticket.getSoldSeatCount());
             ticketRepository.save(ticketUpdate);
             return ticketUpdate;
         }else {
@@ -158,7 +161,6 @@ public class TicketServiceImpl implements TicketService {
             Flight flightDb = flight.get();
             flightDb.setSoldSeatCount(flightDb.getSoldSeatCount()-1);
 
-
             ticketRepository.save(ticketUpdate);
             return ticketUpdate;
         }else {
@@ -170,20 +172,20 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> getAllTickets() {
         return this.ticketRepository.findAll();
     }
+
     @Override
     public List<Ticket> searchTickets(Ticket ticket) {
 
-      /*  if (ticket.getRouteId() > 0 && ticket.getAirwayId()>0 && ticket.getTicketDate() != null ) {
-            return this.ticketRepository.findByRouteIdAndAirwayIdAndTicketDate(ticket.getRouteId(),ticket.getAirwayId(),ticket.getTicketDate());
+        if (ticket.getCustomerId() > 0 && ticket.getFlightId() >0 ) {
+            return this.ticketRepository.findByCustomerIdAndFlightId(ticket.getCustomerId(),ticket.getFlightId());
         }
-        if (ticket.getRouteId() > 0 && ticket.getAirwayId()>0 ){
-            return this.ticketRepository.findByRouteIdAndAirwayId(ticket.getRouteId(),ticket.getAirwayId());
+        else if (ticket.getCustomerId() > 0){
+            return this.ticketRepository.findByCustomerId(ticket.getCustomerId());
+        }else{
+            return this.ticketRepository.findByFlightId(ticket.getFlightId());
         }
-        else{
-            return this.ticketRepository.findByRouteId(ticket.getRouteId());
-        }*/
-        return this.ticketRepository.findByFlightId(ticket.getFlightId());
     }
+
     @Override
     public Ticket getTicketById(long ticketId) {
         Optional<Ticket> ticketDb = this.ticketRepository.findById(ticketId);
