@@ -51,9 +51,7 @@ public class Flight {
 
     @UpdateTimestamp
     private LocalDateTime updatedTimestamp;
-
-
-
+    
 
     public float getPrice() {
         return calculatePrice();
@@ -61,10 +59,10 @@ public class Flight {
 
     private float calculatePrice(){
         float calculatedPrice = this.price;
-        float flightCapacityRate = ( soldSeatCount / seatCapacity ) * 100; // capacity rate should return like 18
+        float flightCapacityRate = ( (float) soldSeatCount / (float) seatCapacity ) * 100; // capacity rate should return like 18
         int flightCapacityRange = (int) (flightCapacityRate /  PRICE_CAPACITY_INCREMENT_RANGE);
         for (int i = 0; i< flightCapacityRange; i++){
-            calculatedPrice = calculatedPrice + (calculatedPrice * PRICE_INCREMENT_RATE);
+            calculatedPrice = calculatedPrice + (calculatedPrice * PRICE_INCREMENT_RATE/100);
         }
         return calculatedPrice;
     }

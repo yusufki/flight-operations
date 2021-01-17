@@ -89,7 +89,7 @@ public class TicketServiceImpl implements TicketService {
             throw new RecordNotCreateException("Couldn't create the ticket, flight is no longer valid :  " + flightDb.getFlightDate() );
         }
 
-        if (!valideTicketCardNumber(ticket.getPaymentCardNumber())){
+        if (!validateTicketCardNumber(ticket.getPaymentCardNumber())){
             throw new RecordNotCreateException("Couldn't create the ticket, payment card number is not valid :  " + ticket.getPaymentCardNumber());
         }
         return  true;
@@ -106,7 +106,7 @@ public class TicketServiceImpl implements TicketService {
         return sb.toString();
     }
 
-    private boolean valideTicketCardNumber(String paymentCardNumber) {
+    private boolean validateTicketCardNumber(String paymentCardNumber) {
    /*
         String regex = "^(?:(?<visa>4[0-9]{12}(?:[0-9]{3})?)|" +
                 "(?<mastercard>5[1-5][0-9]{14})|" +
