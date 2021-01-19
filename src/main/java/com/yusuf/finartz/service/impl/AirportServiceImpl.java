@@ -48,6 +48,7 @@ public class AirportServiceImpl implements AirportService {
         Result result = new Result().setStatus(ResultStatus.FAIL);
 
         if (airportDTO.getName() == null || airportDTO.getName().isEmpty()) {
+            result.setMessage("Name is mandatory");
             result.setErrorCode("MISSING_NAME");
         }
 

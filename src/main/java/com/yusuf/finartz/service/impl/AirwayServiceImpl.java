@@ -18,6 +18,7 @@ import java.util.List;
 public class AirwayServiceImpl implements AirwayService {
 
     @Autowired
+    private
     AirwayRepository airwayRepository;
 
 
@@ -82,6 +83,7 @@ public class AirwayServiceImpl implements AirwayService {
         Result result = new Result().setStatus(ResultStatus.FAIL);
 
         if (airwayDTO.getName() == null || airwayDTO.getName().isEmpty()) {
+            result.setMessage("Name is mandatory");
             result.setErrorCode("MISSING_NAME");
         }
 
