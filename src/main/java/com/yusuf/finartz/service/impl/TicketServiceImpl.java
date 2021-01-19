@@ -195,7 +195,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> searchTickets(Ticket ticket) {
 
-        if (ticket.getCustomerId() > 0 && ticket.getFlight().getId() > 0) {
+        if (ticket.getCustomerId() > 0 && ticket.getFlight()!=null) {
             return this.ticketRepository.findByCustomerIdAndFlightId(ticket.getCustomerId(), ticket.getFlight().getId());
         } else if (ticket.getCustomerId() > 0) {
             return this.ticketRepository.findByCustomerId(ticket.getCustomerId());
