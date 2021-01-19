@@ -1,50 +1,39 @@
 package com.yusuf.finartz.model;
 
-
+import com.yusuf.finartz.bean.IdObject;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "tickets",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"flightId","customerId"}, name = "uniqueTicketConstraint")})
+
 
 @Getter
 @Setter
-public class Ticket {
+@ToString
+public class Ticket extends IdObject {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(columnDefinition = "FLIGHT_ID")
+    private Flight flight;
 
-    @Column(name ="flightId")
-    private long flightId;
-
-    @Column(name ="customerId")
+    @Column(name="CUSTOMER_ID")
     private long customerId;
 
-    @Column(name ="price")
+    @Column(name="PRICE")
     private float price;
 
-    @Column(name ="currency")
+    @Column(name="CURRENCY")
     private String currency;
 
-    @Column(name ="paymentCardNumber")
+    @Column(name="PAYMENT_CARD_NUMBER")
     private String paymentCardNumber;
 
-    @Column(name ="status")
+    @Column(name="STATUS")
     private String status;
-
-    @CreationTimestamp
-    private LocalDateTime createdTimestamp;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedTimestamp;
 
 }

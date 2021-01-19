@@ -1,21 +1,19 @@
 package com.yusuf.finartz.service;
 
+import com.yusuf.finartz.bean.Result;
+import com.yusuf.finartz.bean.ResultBean;
 import com.yusuf.finartz.model.Flight;
+import com.yusuf.finartz.model.FlightDTO;
 
 import java.util.List;
 
 public interface FlightService {
 
-    Flight createFlight(Flight flight);
+    ResultBean<List<Flight>> findAll();
 
-    Flight updateFlight(Flight flight);
+    ResultBean<Flight> findById(long id);
 
-    List<Flight> getAllFlights();
+    Result createFlight(FlightDTO flightDTO);
 
-    Flight getFlightById(long flightId);
-
-    void deleteFlight(long flightId);
-
-    List<Flight> searchFlights(Flight flight);
-
+    ResultBean<List<Flight>> searchFlights(FlightDTO flightDTO);
 }

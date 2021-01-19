@@ -1,23 +1,18 @@
 package com.yusuf.finartz.service;
 
+import com.yusuf.finartz.bean.Result;
+import com.yusuf.finartz.bean.ResultBean;
 import com.yusuf.finartz.model.Airport;
-import com.yusuf.finartz.model.Airway;
+import com.yusuf.finartz.model.AirportDTO;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 public interface AirportService {
+    Result createAirport(AirportDTO airportDTO);
 
-    Airport createAirport(Airport airport);
+    ResultBean<List<Airport>> findAll();
 
-    Airport updateAirport(Airport airport);
+    ResultBean<Airport> findById(long airportId);
 
-    List<Airport> getAllAirports();
-
-    List<Airport> searchAirports(Airport airport);
-
-    Airport getAirportById(long airportId);
-
-    void deleteAirport(long airportId);
-
+    ResultBean<Airport> findByName(String airwayName);
 }

@@ -1,21 +1,20 @@
 package com.yusuf.finartz.service;
 
+import com.yusuf.finartz.bean.Result;
+import com.yusuf.finartz.bean.ResultBean;
 import com.yusuf.finartz.model.Airway;
+import com.yusuf.finartz.model.AirwayDTO;
 
 import java.util.List;
 
 public interface AirwayService {
 
-    Airway createAirway(Airway airway);
+    Result createAirway(AirwayDTO airwayDTO);
 
-    Airway updateAirway(Airway airway);
+    ResultBean<List<Airway>> findAll();
 
-    List<Airway> getAllAirways();
+    ResultBean<Airway> findById(long airportId);
 
-    Airway getAirwayById(long airwayId);
-
-    void deleteAirway(long airwayId);
-
-    List<Airway> searchAirways(Airway airway);
+    ResultBean<Airway> findByName(String airwayName);
 
 }

@@ -6,23 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @ToString
-public class Route extends IdObject {
+public class RouteDTO {
 
-    @ManyToOne
-    @JoinColumn(name = "FROM_AIRPORT_ID")
+    private long id;
     private Airport fromAirport;
-
-    @ManyToOne
-    @JoinColumn(name = "TO_AIRPORT_ID")
     private Airport toAirport;
-
-    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
     private List<Flight> flight;
 }

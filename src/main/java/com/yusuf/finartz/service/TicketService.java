@@ -1,20 +1,21 @@
 package com.yusuf.finartz.service;
 
+import com.yusuf.finartz.bean.Result;
+import com.yusuf.finartz.bean.ResultBean;
 import com.yusuf.finartz.model.Ticket;
+import com.yusuf.finartz.model.TicketDTO;
 
 import java.util.List;
 
 public interface TicketService {
+    ResultBean<List<Ticket>> findAll();
 
-    Ticket createTicket(Ticket ticket);
+    ResultBean<Ticket> findById(long id);
 
-    Ticket updateTicket(Ticket ticket);
+    Result createTicket(TicketDTO ticketDTO);
+
 
     Ticket cancelTicket(long ticketId);
-
-    List<Ticket> getAllTickets();
-
-    Ticket getTicketById(long ticketId);
 
     void deleteTicket(long ticketId);
 

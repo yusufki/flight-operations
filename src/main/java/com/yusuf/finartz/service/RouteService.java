@@ -1,20 +1,19 @@
 package com.yusuf.finartz.service;
 
+import com.yusuf.finartz.bean.Result;
+import com.yusuf.finartz.bean.ResultBean;
 import com.yusuf.finartz.model.Route;
+import com.yusuf.finartz.model.RouteDTO;
 
 import java.util.List;
 
 public interface RouteService {
 
-    Route createRoute(Route route);
+    ResultBean<List<Route>> findAll();
 
-    Route updateRoute(Route route);
+    ResultBean<Route> findById(long id);
 
-    List<Route> getAllRoutes();
+    Result createRoute(RouteDTO routeDTO);
 
-    List<Route> searchRoutes(Route route);
-
-    Route getRouteById(long routeId);
-
-    void deleteRoute(long routeId);
+    ResultBean<List<Route>> searchRoutes(RouteDTO routeDTO);
 }
