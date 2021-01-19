@@ -13,6 +13,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"FROM_AIRPORT_ID","TO_AIRPORT_ID"})
+})
 public class Route extends IdObject {
 
     @ManyToOne
@@ -23,6 +26,5 @@ public class Route extends IdObject {
     @JoinColumn(name = "TO_AIRPORT_ID")
     private Airport toAirport;
 
-    @OneToMany(mappedBy = "route", fetch = FetchType.LAZY)
-    private List<Flight> flight;
+
 }

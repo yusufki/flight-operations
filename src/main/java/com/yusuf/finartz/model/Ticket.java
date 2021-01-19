@@ -15,10 +15,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"FLIGHT_ID","CUSTOMER_ID"})
+})
 public class Ticket extends IdObject {
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(columnDefinition = "FLIGHT_ID")
+    @ManyToOne
+    @JoinColumn(name = "FLIGHT_ID")
     private Flight flight;
 
     @Column(name="CUSTOMER_ID")

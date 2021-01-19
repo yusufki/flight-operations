@@ -76,7 +76,6 @@ public class AirportServiceImpl implements AirportService {
         } else {
             result.setData(airport);
         }
-
         return result;
     }
 

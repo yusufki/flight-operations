@@ -68,17 +68,18 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Result createTicket(TicketDTO ticketDTO) {
-        Result result = validateTicketFields(ticketDTO);
 
+
+        Result result = new Result().setStatus(ResultStatus.FAIL);
+        Flight flight = flightRepository.findById(ticketDTO.getFlight().getId());
+        if (flight == null) {
+              result.setErrorCode("INVALID_FLIGHT");
+              result.setMessage("Couldn't create the ticket, flight is not valid " + ticketDTO.getFlight());
+              return result.setStatus(ResultStatus.FAIL);
+        }
+
+        result = validateTicketFields(ticketDTO,flight);
         if (result.isOk()) {
-
-            Flight flight = ticketDTO.getFlight();
-            if (flight == null) {
-                result.setErrorCode("INVALID_FLIGHT");
-                result.setMessage("Couldn't create the ticket, flight is not valid " + ticketDTO.getFlight());
-                return result.setStatus(ResultStatus.FAIL);
-            }
-
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             Ticket ticket = modelMapper.map(ticketDTO, Ticket.class);
@@ -92,7 +93,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
 
-    private Result validateTicketFields(TicketDTO ticketDTO) {
+    private Result validateTicketFields(TicketDTO ticketDTO,Flight flight) {
         Result result = new Result().setStatus(ResultStatus.FAIL);
 
         List<Ticket> ticketDb = ticketRepository.findByCustomerIdAndStatus(ticketDTO.getCustomerId(), TICKET_ACTIVE);
@@ -102,20 +103,20 @@ public class TicketServiceImpl implements TicketService {
             return result;
         }
 
-        if (ticketDTO.getFlight().getSoldSeatCount() == ticketDTO.getFlight().getSeatCapacity()) {
+        if (flight.getSoldSeatCount() == flight.getSeatCapacity()) {
             result.setErrorCode("INVALID_TICKET");
             result.setMessage("Couldn't create the ticket, flight is full!");
             return result;
         }
-        if (ticketDTO.getFlight().getPrice() == ticketDTO.getPrice() && !ticketDTO.getFlight().getCurrency().equals(ticketDTO.getCurrency())) {
+        if (flight.getPrice() != ticketDTO.getPrice() || !flight.getCurrency().equals(ticketDTO.getCurrency())) {
             result.setErrorCode("INVALID_TICKET");
-            result.setMessage("Couldn't create the ticket, check the price " + ticketDTO.getPrice() + " " + ticketDTO.getCurrency() +
-                    " " + ticketDTO.getFlight().getPrice() + " " + ticketDTO.getFlight().getCurrency());
+            result.setMessage("Couldn't create the ticket, check the price (" + ticketDTO.getPrice() + "  " + ticketDTO.getCurrency() +
+                    " != " + flight.getPrice() + " " + flight.getCurrency() + ")" );
             return result;
         }
-        if (ticketDTO.getFlight().getFlightDate().isBefore(LocalDateTime.now())) {
+        if (flight.getFlightDate().isBefore(LocalDateTime.now())) {
             result.setErrorCode("INVALID_TICKET");
-            result.setMessage("Couldn't create the ticket, flight is no longer valid :  " + ticketDTO.getFlight().getFlightDate());
+            result.setMessage("Couldn't create the ticket, flight is no longer valid :  " + flight.getFlightDate());
             return result;
         }
 
@@ -136,7 +137,7 @@ public class TicketServiceImpl implements TicketService {
         for (int i = 0; i < ccNumber.length() - (UNMASKED_CHAR_START + UNMASKED_CHAR_END); i++) {
             sb.append(MASK_CHAR);
         }
-        sb.append(ccNumber, ((ccNumber.length() - UNMASKED_CHAR_END) - 1), (ccNumber.length() - 1));
+        sb.append(ccNumber, ((ccNumber.length() - UNMASKED_CHAR_END) ), (ccNumber.length()));
         return sb.toString();
     }
 

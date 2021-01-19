@@ -13,10 +13,11 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"name"})
+})
 public class Airway extends IdObject {
 
     private String name;
 
-    @OneToMany(mappedBy = "airway", fetch = FetchType.LAZY)
-    private List<Flight> flight;
 }

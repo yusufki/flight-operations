@@ -17,7 +17,6 @@ public class FlightDTO {
     private long id;
     private Route route;
     private Airway airway;
-    private List<Ticket> ticketList;
     private LocalDateTime flightDate;
     private int seatCapacity;
     private int soldSeatCount;

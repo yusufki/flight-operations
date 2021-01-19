@@ -12,8 +12,11 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     List<Flight> findByRouteId(long routeId);
 
-    List<Flight> findByRouteIdAndAirwayId(long routeId, long airwayId);
+    List<Flight> findByFlightDate(LocalDateTime flightDate);
 
     List<Flight> findByRouteIdAndAirwayIdAndFlightDate(long routeId, long airwayId, LocalDateTime flightDate);
+
+    List<Flight> findByRouteIdAndFlightDate(long routeId, LocalDateTime flightDate);
+
 
 }

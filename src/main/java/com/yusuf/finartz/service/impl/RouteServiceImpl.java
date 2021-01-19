@@ -20,9 +20,11 @@ import java.util.List;
 public class RouteServiceImpl implements RouteService {
 
     @Autowired
+    private
     RouteRepository routeRepository;
 
     @Autowired
+    private
     AirportRepository airportRepository;
 
 
@@ -87,14 +89,19 @@ public class RouteServiceImpl implements RouteService {
         ResultBean<List<Route>> resultBean = new ResultBean<>();
         List<Route> routeList;
 
-        if (routeDTO.getFromAirport().getId() > 0 && routeDTO.getToAirport().getId() > 0) {
+        if (routeDTO.getFromAirport() !=null  && routeDTO.getToAirport() != null) {
             routeList = routeRepository.findByFromAirportIdAndToAirportId(routeDTO.getFromAirport().getId(), routeDTO.getToAirport().getId());
-        }
-        if (routeDTO.getFromAirport().getId() > 0) {
+        }else if (routeDTO.getFromAirport() != null) {
             routeList = routeRepository.findByFromAirportId(routeDTO.getFromAirport().getId());
-        } else {
+        } else if (routeDTO.getToAirport() != null){
             routeList = routeRepository.findByToAirportId(routeDTO.getToAirport().getId());
+        }else{
+            resultBean.setErrorCode("INVALID_SEARCH");
+            resultBean.setMessage("Couldn't search, insufficient search criteria");
+            resultBean.setStatus(ResultStatus.FAIL);
+            return resultBean;
         }
+
 
         resultBean.setData(routeList);
         resultBean.setStatus(ResultStatus.OK);

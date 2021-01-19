@@ -15,4 +15,5 @@ public interface AirportService {
     ResultBean<Airport> findById(long airportId);
 
     ResultBean<Airport> findByName(String airwayName);
+
 }

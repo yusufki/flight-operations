@@ -8,8 +8,8 @@ import com.yusuf.finartz.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
-
 @RestController
 @RequestMapping(value = "/route")
 public class RouteController {

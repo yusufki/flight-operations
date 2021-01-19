@@ -25,12 +25,15 @@ public class FlightServiceImpl implements FlightService {
     private static final String BASE_FOREIGN_CURRENCY_CODE = "USD";
 
     @Autowired
+    private
     FlightRepository flightRepository;
 
     @Autowired
+    private
     AirwayRepository airwayRepository;
 
     @Autowired
+    private
     RouteRepository routeRepository;
 
 
@@ -38,6 +41,7 @@ public class FlightServiceImpl implements FlightService {
     public ResultBean<List<Flight>> findAll() {
         ResultBean<List<Flight>> resultBean = new ResultBean<>();
         List<Flight> flightList = flightRepository.findAll();
+
 
         resultBean.setData(flightList);
         resultBean.setStatus(ResultStatus.OK);
@@ -103,17 +107,26 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public ResultBean<List<Flight>> searchFlights(FlightDTO flightDTO) {
-        ResultBean<List<Flight>> resultBean = new ResultBean<>();
-        List<Flight> flightList;
 
-        if (flightDTO.getRoute().getId() > 0 && flightDTO.getAirway().getId() > 0 && flightDTO.getFlightDate() != null) {
+        ResultBean<List<Flight>> resultBean = new ResultBean<>();
+        List<Flight> flightList ;
+
+        if ( flightDTO.getRoute() != null  && flightDTO.getAirway() != null  && flightDTO.getFlightDate() != null) {
             flightList = flightRepository.findByRouteIdAndAirwayIdAndFlightDate(flightDTO.getRoute().getId(), flightDTO.getAirway().getId(), flightDTO.getFlightDate());
-        }
-        if (flightDTO.getRoute().getId() > 0 && flightDTO.getAirway().getId() > 0) {
-            flightList = flightRepository.findByRouteIdAndAirwayId(flightDTO.getRoute().getId(), flightDTO.getAirway().getId());
-        } else {
+        }else if (flightDTO.getRoute() != null  && flightDTO.getFlightDate() != null) {
+            flightList = flightRepository.findByRouteIdAndFlightDate(flightDTO.getRoute().getId(), flightDTO.getFlightDate());
+        }else if (flightDTO.getFlightDate() != null)         {
+            flightList = flightRepository.findByFlightDate(flightDTO.getFlightDate());
+        }else if (flightDTO.getRoute() != null){
             flightList = flightRepository.findByRouteId(flightDTO.getRoute().getId());
         }
+        else{
+            resultBean.setErrorCode("INVALID_SEARCH");
+            resultBean.setMessage("Couldn't search, insufficient search criteria");
+            resultBean.setStatus(ResultStatus.FAIL);
+            return resultBean;
+        }
+
 
         resultBean.setData(flightList);
         resultBean.setStatus(ResultStatus.OK);

@@ -16,5 +16,4 @@ public class RouteDTO {
     private long id;
     private Airport fromAirport;
     private Airport toAirport;
-    private List<Flight> flight;
 }

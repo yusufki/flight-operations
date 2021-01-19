@@ -12,11 +12,12 @@ import java.util.List;
 
 
 @Entity
-
-
 @Getter
 @Setter
 @ToString
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"ROUTE_ID","AIRWAY_ID","FLIGHT_DATE"})
+})
 public class Flight extends IdObject {
 
     private static final float PRICE_CAPACITY_INCREMENT_RANGE = 10f; // Each 10 percent capacity increment
@@ -29,9 +30,6 @@ public class Flight extends IdObject {
     @ManyToOne
     @JoinColumn(name = "AIRWAY_ID")
     private Airway airway;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Ticket> ticketList;
 
     @Column(name = "FLIGHT_DATE")
     private LocalDateTime flightDate;

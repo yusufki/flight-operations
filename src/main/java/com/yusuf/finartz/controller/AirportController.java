@@ -41,11 +41,12 @@ public class AirportController {
         return airportService.createAirport(airportDTO);
     }
 
+/*
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result> handleException(RuntimeException ex){
         Result result = new Result();
         result.setStatus(ResultStatus.FAIL).setErrorCode("AIRPORT_NOT_UNIQE");
         result.setMessage("Record not created with name : " );
         return new ResponseEntity<Result>(result,HttpStatus.CONFLICT);
-    }
+    }*/
 }
