@@ -2,10 +2,14 @@ package com.yusuf.finartz.controller;
 
 import com.yusuf.finartz.bean.Result;
 import com.yusuf.finartz.bean.ResultBean;
+import com.yusuf.finartz.bean.ResultStatus;
 import com.yusuf.finartz.model.Airport;
 import com.yusuf.finartz.model.AirportDTO;
 import com.yusuf.finartz.service.AirportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,4 +41,11 @@ public class AirportController {
         return airportService.createAirport(airportDTO);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Result> handleException(RuntimeException ex){
+        Result result = new Result();
+        result.setStatus(ResultStatus.FAIL).setErrorCode("AIRPORT_NOT_UNIQE");
+        result.setMessage("Record not created with name : " );
+        return new ResponseEntity<Result>(result,HttpStatus.CONFLICT);
+    }
 }

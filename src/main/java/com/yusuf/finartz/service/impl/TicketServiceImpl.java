@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class TicketServiceImpl implements TicketService {
 
     private static final String TICKET_CANCELLED = "C";

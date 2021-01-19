@@ -17,7 +17,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class RouteServiceImpl implements RouteService {
 
     @Autowired

@@ -12,11 +12,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class AirwayServiceImpl implements AirwayService {
 
     @Autowired
@@ -83,7 +81,7 @@ public class AirwayServiceImpl implements AirwayService {
     private Result validate(AirwayDTO airwayDTO) {
         Result result = new Result().setStatus(ResultStatus.FAIL);
 
-        if (airwayDTO.getName() == null) {
+        if (airwayDTO.getName() == null || airwayDTO.getName().isEmpty()) {
             result.setErrorCode("MISSING_NAME");
         }
 

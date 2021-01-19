@@ -14,17 +14,15 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
 public class FlightServiceImpl implements FlightService {
 
     private static final int MAX_SEAT_CAPACITY = 1000;
     private static final String BASE_CURRENCY_CODE = "TL";
-    private static final String BASE_FOREIGN_CODE = "USD";
+    private static final String BASE_FOREIGN_CURRENCY_CODE = "USD";
 
     @Autowired
     FlightRepository flightRepository;
@@ -83,7 +81,7 @@ public class FlightServiceImpl implements FlightService {
         if (flightDTO.getPrice() <= 0) {
             result.setErrorCode("INVALID_PRICE");
             result.setMessage("Couldn't create the flight with price " + flightDTO.getPrice());
-        } else if (!flightDTO.getCurrency().equals(BASE_CURRENCY_CODE) && !flightDTO.getCurrency().equals(BASE_FOREIGN_CODE)) {
+        } else if (!flightDTO.getCurrency().equals(BASE_CURRENCY_CODE) && !flightDTO.getCurrency().equals(BASE_FOREIGN_CURRENCY_CODE)) {
             result.setErrorCode("INVALID_CURRENCY");
             result.setMessage("Couldn't create the flight with currency " + flightDTO.getCurrency());
         } else if (flightDTO.getSeatCapacity() <= 0 || flightDTO.getSeatCapacity() > MAX_SEAT_CAPACITY) {

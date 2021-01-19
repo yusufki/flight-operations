@@ -14,6 +14,9 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames = {"name"})
+})
 public class Airport extends IdObject {
 
     private String name;
