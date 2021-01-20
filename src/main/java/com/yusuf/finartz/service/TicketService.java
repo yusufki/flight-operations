@@ -14,10 +14,7 @@ public interface TicketService {
 
     Result createTicket(TicketDTO ticketDTO);
 
-
-    Ticket cancelTicket(long ticketId);
-
-    void deleteTicket(long ticketId);
+    Result cancelTicket(long ticketId);
 
     List<Ticket> searchTickets(Ticket ticket);
 

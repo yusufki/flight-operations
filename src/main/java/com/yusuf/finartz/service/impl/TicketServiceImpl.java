@@ -3,8 +3,6 @@ package com.yusuf.finartz.service.impl;
 import com.yusuf.finartz.bean.Result;
 import com.yusuf.finartz.bean.ResultBean;
 import com.yusuf.finartz.bean.ResultStatus;
-import com.yusuf.finartz.exception.RecordNotCreateException;
-import com.yusuf.finartz.exception.ResourceNotFoundException;
 import com.yusuf.finartz.model.Flight;
 import com.yusuf.finartz.model.Ticket;
 import com.yusuf.finartz.model.TicketDTO;
@@ -16,10 +14,8 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -142,7 +138,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private boolean validateTicketCardNumber(String paymentCardNumber) {
-   /*
+        // here; there should be used more sophisticate credit_card validation algorithms
+        /*
         String regex = "^(?:(?<visa>4[0-9]{12}(?:[0-9]{3})?)|" +
                 "(?<mastercard>5[1-5][0-9]{14})|" +
                 "(?<discover>6(?:011|5[0-9]{2})[0-9]{12})|" +
@@ -170,25 +167,31 @@ public class TicketServiceImpl implements TicketService {
 
 
     @Override
-    public Ticket cancelTicket(long ticketId) {
+    public Result cancelTicket(long ticketId) {
+        Result result = new Result().setStatus(ResultStatus.FAIL);
         Ticket ticketDb = this.ticketRepository.findById(ticketId);
 
-        if (ticketDb != null) {
-            ticketDb.setStatus(TICKET_CANCELLED);
-
-            Flight flight = ticketDb.getFlight();
-
-            if (flight == null) {
-                throw new RecordNotCreateException("Couldn't create the ticket, flight is not valid ");
-            }
-
-            flight.setSoldSeatCount(flight.getSoldSeatCount() - 1);
-
-            ticketRepository.save(ticketDb);
-            return ticketDb;
-        } else {
-            throw new ResourceNotFoundException("Record not found with id : " + ticketId);
+        if (ticketDb == null) {
+            result.setErrorCode("INVALID_TICKET");
+            result.setMessage("Record not found with id : " + ticketId);
+            return result;
         }
+        if (ticketDb.getStatus().equals(TICKET_CANCELLED)){
+            result.setErrorCode("INVALID_TICKET");
+            result.setMessage("Ticket is already cancelled : " + ticketId);
+            return result;
+        }
+
+        Flight flight = ticketDb.getFlight();
+        if (flight == null) {
+                result.setErrorCode("INVALID_TICKET");
+                result.setMessage("Couldn't create the ticket, flight is not valid");
+                return result;
+        }
+        ticketDb.setStatus(TICKET_CANCELLED);
+        flight.setSoldSeatCount(flight.getSoldSeatCount() - 1);
+        ticketRepository.save(ticketDb);
+        return result;
     }
 
 
@@ -204,16 +207,4 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
-
-    @Override
-    public void deleteTicket(long ticketId) {
-        Ticket ticketDb = this.ticketRepository.findById(ticketId);
-
-        if (ticketDb != null) {
-            this.ticketRepository.delete(ticketDb);
-        } else {
-            throw new ResourceNotFoundException("Record not found with id : " + ticketId);
-        }
-
-    }
 }

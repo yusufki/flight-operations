@@ -15,9 +15,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@Table(uniqueConstraints={
-        @UniqueConstraint(columnNames = {"FLIGHT_ID","CUSTOMER_ID"})
-})
+
 public class Ticket extends IdObject {
 
     @ManyToOne

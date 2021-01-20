@@ -3,7 +3,6 @@ package com.yusuf.finartz.service.impl;
 import com.yusuf.finartz.bean.Result;
 import com.yusuf.finartz.bean.ResultBean;
 import com.yusuf.finartz.bean.ResultStatus;
-import com.yusuf.finartz.exception.RecordNotCreateException;
 import com.yusuf.finartz.model.Airport;
 import com.yusuf.finartz.model.AirportDTO;
 import com.yusuf.finartz.repository.AirportRepository;
@@ -13,7 +12,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -31,17 +29,9 @@ public class AirportServiceImpl implements AirportService {
             ModelMapper modelMapper = new ModelMapper();
             modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
             Airport airport = modelMapper.map(airportDTO, Airport.class);
-
-            try {
-                airportRepository.saveAndFlush(airport);
-            }catch (Exception e){
-                result.setStatus(ResultStatus.FAIL).setErrorCode("AIRPORT_NOT_UNIQE");
-                result.setMessage("Record not created with name : " + airportDTO.getName());
-                throw new RecordNotCreateException("Record not created with name : "+ airportDTO.getName());
-            }
+            airportRepository.save(airport);
         }
         return result;
-
     }
 
     private Result validate(AirportDTO airportDTO) {

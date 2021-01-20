@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -41,12 +42,12 @@ public class AirportController {
         return airportService.createAirport(airportDTO);
     }
 
-/*
-    @ExceptionHandler(Exception.class)
+
+    @ExceptionHandler(SQLException.class)
     public ResponseEntity<Result> handleException(RuntimeException ex){
         Result result = new Result();
         result.setStatus(ResultStatus.FAIL).setErrorCode("AIRPORT_NOT_UNIQE");
-        result.setMessage("Record not created with name : " );
-        return new ResponseEntity<Result>(result,HttpStatus.CONFLICT);
-    }*/
+        result.setMessage("Airport already exists" );
+        return new ResponseEntity<>(result,HttpStatus.CONFLICT);
+    }
 }
