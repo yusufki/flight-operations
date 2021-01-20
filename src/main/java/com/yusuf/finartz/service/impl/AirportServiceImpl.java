@@ -41,7 +41,6 @@ public class AirportServiceImpl implements AirportService {
             result.setMessage("Name is mandatory");
             result.setErrorCode("MISSING_NAME");
         }
-
         return result.getErrorCode() == null ? result.setStatus(ResultStatus.OK) : result;
     }
 
@@ -52,7 +51,6 @@ public class AirportServiceImpl implements AirportService {
 
         resultBean.setData(airportList);
         resultBean.setStatus(ResultStatus.OK);
-
         return resultBean;
     }
 
@@ -82,7 +80,6 @@ public class AirportServiceImpl implements AirportService {
         } else {
             result.setData(airport);
         }
-
         return result;
     }
 

@@ -36,12 +36,10 @@ public class FlightServiceImpl implements FlightService {
     private
     RouteRepository routeRepository;
 
-
     @Override
     public ResultBean<List<Flight>> findAll() {
         ResultBean<List<Flight>> resultBean = new ResultBean<>();
         List<Flight> flightList = flightRepository.findAll();
-
 
         resultBean.setData(flightList);
         resultBean.setStatus(ResultStatus.OK);
@@ -60,7 +58,6 @@ public class FlightServiceImpl implements FlightService {
         } else {
             result.setData(flight);
         }
-
         return result;
     }
 
@@ -76,7 +73,6 @@ public class FlightServiceImpl implements FlightService {
             flightRepository.save(flight);
         }
         return result;
-
     }
 
     private Result validateFlightFields(FlightDTO flightDTO) {
@@ -101,7 +97,6 @@ public class FlightServiceImpl implements FlightService {
             result.setErrorCode("INVALID_AIRWAY");
             result.setMessage("Couldn't create the flight, airway is not valid " + flightDTO.getAirway());
         }
-
         return result.getErrorCode() == null ? result.setStatus(ResultStatus.OK) : result;
     }
 
@@ -127,12 +122,10 @@ public class FlightServiceImpl implements FlightService {
             return resultBean;
         }
 
-
         resultBean.setData(flightList);
         resultBean.setStatus(ResultStatus.OK);
 
         return resultBean;
-
     }
 
 }

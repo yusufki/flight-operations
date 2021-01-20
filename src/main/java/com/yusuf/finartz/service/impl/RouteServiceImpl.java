@@ -27,7 +27,6 @@ public class RouteServiceImpl implements RouteService {
     private
     AirportRepository airportRepository;
 
-
     @Override
     public ResultBean<List<Route>> findAll() {
         ResultBean<List<Route>> resultBean = new ResultBean<>();
@@ -101,7 +100,6 @@ public class RouteServiceImpl implements RouteService {
             resultBean.setStatus(ResultStatus.FAIL);
             return resultBean;
         }
-
 
         resultBean.setData(routeList);
         resultBean.setStatus(ResultStatus.OK);

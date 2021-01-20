@@ -1,7 +1,6 @@
 package com.yusuf.finartz.model;
 
 import com.yusuf.finartz.bean.IdObject;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

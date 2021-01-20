@@ -21,7 +21,6 @@ public class AirwayServiceImpl implements AirwayService {
     private
     AirwayRepository airwayRepository;
 
-
     @Override
     public ResultBean<List<Airway>> findAll() {
         ResultBean<List<Airway>> resultBean = new ResultBean<>();
@@ -29,7 +28,6 @@ public class AirwayServiceImpl implements AirwayService {
 
         resultBean.setData(airwayList);
         resultBean.setStatus(ResultStatus.OK);
-
         return resultBean;
     }
 
@@ -45,7 +43,6 @@ public class AirwayServiceImpl implements AirwayService {
         } else {
             result.setData(airway);
         }
-
         return result;
     }
 
@@ -61,7 +58,6 @@ public class AirwayServiceImpl implements AirwayService {
         } else {
             result.setData(airway);
         }
-
         return result;
     }
 
@@ -76,7 +72,6 @@ public class AirwayServiceImpl implements AirwayService {
             airwayRepository.save(airway);
         }
         return result;
-
     }
 
     private Result validate(AirwayDTO airwayDTO) {
@@ -86,7 +81,6 @@ public class AirwayServiceImpl implements AirwayService {
             result.setMessage("Name is mandatory");
             result.setErrorCode("MISSING_NAME");
         }
-
         return result.getErrorCode() == null ? result.setStatus(ResultStatus.OK) : result;
     }
 }

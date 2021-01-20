@@ -121,7 +121,6 @@ public class TicketServiceImpl implements TicketService {
             result.setMessage("Couldn't create the ticket, payment card number is not valid :  " + ticketDTO.getPaymentCardNumber());
             return result;
         }
-
         return result.getErrorCode() == null ? result.setStatus(ResultStatus.OK) : result;
     }
 
@@ -161,9 +160,7 @@ public class TicketServiceImpl implements TicketService {
 
         String ccNumber = paymentCardNumber.replaceAll("\\D", "");
         return ccNumber.length() == DEFAULT_CARD_NUMBER_LENGTH;
-
     }
-
 
 
     @Override
